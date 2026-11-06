@@ -1,10 +1,10 @@
-package com.fst.eaecact1_t4;
+package com.fst.eaecact2_t4;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class Eaecact1T4ApplicationTests {
+class Eaecact2T4ApplicationTests {
 
 	@Test
 	void contextLoads() {

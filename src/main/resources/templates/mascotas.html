@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${titulo}">Mascotas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fb;
+            color: #222;
+            margin: 0;
+            padding: 24px;
+        }
+        .contenedor {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 24px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+        .banner-propiedades {
+            background-color: #e8f0fe;
+            border-left: 5px solid #1a73e8;
+            padding: 14px 18px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .banner-propiedades h2 {
+            margin: 0 0 6px 0;
+            color: #1a73e8;
+        }
+        .banner-propiedades p {
+            margin: 4px 0;
+            font-size: 14px;
+        }
+        .alerta-exito {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 18px;
+            border: 1px solid #c3e6cb;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            margin-bottom: 24px;
+        }
+        th, td {
+            border: 1px solid #dce3ec;
+            padding: 10px 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #1a73e8;
+            color: #ffffff;
+        }
+        tr:nth-child(even) {
+            background-color: #f8fafd;
+        }
+        .formulario-box {
+            background-color: #f9fbfd;
+            border: 1px solid #dce3ec;
+            padding: 18px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .fila-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 4px;
+            font-size: 13px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #1a73e8;
+            color: #fff;
+            padding: 9px 16px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-secundario {
+            background-color: #5f6368;
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor">
+        <!-- Propiedades leídas con @Value desde application.properties -->
+        <div class="banner-propiedades">
+            <h2 th:text="${nombreVeterinaria}">Nombre Veterinaria</h2>
+            <p><strong>Eslogan (@Value):</strong> <span th:text="${eslogan}">Eslogan</span></p>
+            <p><strong>Horario (@Value):</strong> <span th:text="${horario}">Horario</span></p>
+        </div>
+
+        <h1 th:text="${titulo}">Listado de Mascotas</h1>
+
+        <div th:if="${mensajeExito != null}" class="alerta-exito" th:text="${mensajeExito}"></div>
+
+        <!-- Tabla iterada con th:each usando datos en memoria del Model / @ModelAttribute -->
+        <div th:if="${mascotas.isEmpty()}">
+            <p>No hay mascotas registradas en la lista.</p>
+        </div>
+
+        <table th:if="${!mascotas.isEmpty()}">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Especie</th>
+                    <th>Raza</th>
+                    <th>Edad (años)</th>
+                    <th>Propietario</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="mascota : ${mascotas}">
+                    <td th:text="${mascota.id}">1</td>
+                    <td th:text="${mascota.nombre}">Bobby</td>
+                    <td th:text="${mascota.especie}">Perro</td>
+                    <td th:text="${mascota.raza}">Golden Retriever</td>
+                    <td th:text="${mascota.edad}">3</td>
+                    <td th:text="${mascota.propietario}">Edwin Alexis</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Formulario integrado usando @ModelAttribute -->
+        <div class="formulario-box">
+            <h3>Registrar Nueva Mascota (@ModelAttribute)</h3>
+            <form th:action="@{/mascotas/guardar}" th:object="${nuevaMascota}" method="post">
+                <div class="fila-form">
+                    <div>
+                        <label for="id">ID:</label>
+                        <input type="number" id="id" th:field="*{id}" placeholder="Ej. 5" required>
+                    </div>
+                    <div>
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" id="nombre" th:field="*{nombre}" placeholder="Ej. Max" required>
+                    </div>
+                    <div>
+                        <label for="especie">Especie:</label>
+                        <input type="text" id="especie" th:field="*{especie}" placeholder="Ej. Perro" required>
+                    </div>
+                    <div>
+                        <label for="raza">Raza:</label>
+                        <input type="text" id="raza" th:field="*{raza}" placeholder="Ej. Beagle" required>
+                    </div>
+                    <div>
+                        <label for="edad">Edad:</label>
+                        <input type="number" id="edad" th:field="*{edad}" placeholder="Ej. 2" required>
+                    </div>
+                    <div>
+                        <label for="propietario">Propietario:</label>
+                        <input type="text" id="propietario" th:field="*{propietario}" placeholder="Ej. Luis Torres" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn">Guardar Mascota</button>
+                <a th:href="@{/mascotas/formulario}" class="btn btn-secundario">Abrir Formulario Individual</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
